@@ -158,8 +158,16 @@ class AnnotationDriver implements DriverInterface
                         $propertyMetadata->serializedName = $annot->name;
                     } elseif ($annot instanceof Expose) {
                         $isExpose = true;
+                        if ($annot->serialize !== null || $annot->deserialize !== null) {
+                            $propertyMetadata->exposeToSerialize = $annot->serialize;
+                            $propertyMetadata->exposeToDeserialize = $annot->deserialize;
+                        }
                     } elseif ($annot instanceof Exclude) {
                         $isExclude = true;
+                        if ($annot->serialize !== null || $annot->deserialize !== null) {
+                            $propertyMetadata->excludeFromSerialize = $annot->serialize;
+                            $propertyMetadata->excludeFromDeserialize = $annot->deserialize;
+                        }
                     } elseif ($annot instanceof Type) {
                         $propertyMetadata->setType($annot->name);
                     } elseif ($annot instanceof XmlElement) {
@@ -213,8 +221,8 @@ class AnnotationDriver implements DriverInterface
 
                 $propertyMetadata->setAccessor($accessType, $accessor[0], $accessor[1]);
 
-                if ((ExclusionPolicy::NONE === $exclusionPolicy && ! $isExclude)
-                    || (ExclusionPolicy::ALL === $exclusionPolicy && $isExpose)) {
+                if ((ExclusionPolicy::NONE === $exclusionPolicy && (!$isExclude || isset($propertyMetadata->excludeFromSerialize) || isset($propertyMetadata->excludeFromDeserialize)))
+                    || (ExclusionPolicy::ALL === $exclusionPolicy && ($isExpose || isset($propertyMetadata->exposeToSerialize) || isset($propertyMetadata->exposeToDeserialize)))) {
                     $classMetadata->addPropertyMetadata($propertyMetadata);
                 }
             }

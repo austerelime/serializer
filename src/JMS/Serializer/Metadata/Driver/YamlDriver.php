@@ -81,11 +81,31 @@ class YamlDriver extends AbstractFileDriver
                     $pConfig = $config['properties'][$pName];
 
                     if (isset($pConfig['exclude'])) {
-                        $isExclude = (Boolean) $pConfig['exclude'];
+                        $isExclude = null;
+                        if (is_array($pConfig['exclude'])) {
+                            if (isset($pConfig['exclude']['serialize'])) {
+                                $pMetadata->excludeFromSerialize = $pConfig['exclude']['serialize'];
+                            }
+                            if (isset($pConfig['exclude']['deserialize'])) {
+                                $pMetadata->excludeFromDeserialize = $pConfig['exclude']['deserialize'];
+                            }
+                        } else {
+                            $isExclude = (Boolean)$pConfig['exclude'];
+                        }
                     }
 
                     if (isset($pConfig['expose'])) {
-                        $isExpose = (Boolean) $pConfig['expose'];
+                        $isExpose = null;
+                        if (is_array($pConfig['expose'])) {
+                            if (isset($pConfig['expose']['serialize'])) {
+                                $pMetadata->exposeToSerialize = $pConfig['expose']['serialize'];
+                            }
+                            if (isset($pConfig['expose']['deserialize'])) {
+                                $pMetadata->exposeToDeserialize = $pConfig['expose']['deserialize'];
+                            }
+                        } else {
+                            $isExpose = (Boolean)$pConfig['expose'];
+                        }
                     }
 
                     if (isset($pConfig['since_version'])) {
@@ -186,8 +206,8 @@ class YamlDriver extends AbstractFileDriver
                         $pMetadata->maxDepth = (int) $pConfig['max_depth'];
                     }
                 }
-                if ((ExclusionPolicy::NONE === $exclusionPolicy && ! $isExclude)
-                        || (ExclusionPolicy::ALL === $exclusionPolicy && $isExpose)) {
+                if ((ExclusionPolicy::NONE === $exclusionPolicy && (!$isExclude || isset($pMetadata->excludeFromSerialize) || isset($pMetadata->excludeFromDeserialize)))
+                    || (ExclusionPolicy::ALL === $exclusionPolicy && ($isExpose || isset($pMetadata->exposeToSerialize) || isset($pMetadata->exposeToDeserialize)))) {
                     $metadata->addPropertyMetadata($pMetadata);
                 }
             }

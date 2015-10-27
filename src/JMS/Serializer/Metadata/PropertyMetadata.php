@@ -47,6 +47,10 @@ class PropertyMetadata extends BasePropertyMetadata
     public $readOnly = false;
     public $xmlAttributeMap = false;
     public $maxDepth = null;
+    public $excludeFromSerialize = null;
+    public $excludeFromDeserialize = null;
+    public $exposeToSerialize = null;
+    public $exposeToDeserialize = null;
 
     private static $typeParser;
 
@@ -121,6 +125,10 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->readOnly,
             $this->xmlAttributeMap,
             $this->maxDepth,
+            $this->excludeFromSerialize,
+            $this->excludeFromDeserialize,
+            $this->exposeToSerialize,
+            $this->exposeToDeserialize,
             parent::serialize(),
         ));
     }
@@ -148,6 +156,10 @@ class PropertyMetadata extends BasePropertyMetadata
             $this->readOnly,
             $this->xmlAttributeMap,
             $this->maxDepth,
+            $this->excludeFromSerialize,
+            $this->excludeFromDeserialize,
+            $this->exposeToSerialize,
+            $this->exposeToDeserialize,
             $parentStr
         ) = unserialize($str);
 

@@ -24,4 +24,13 @@ namespace JMS\Serializer\Annotation;
  */
 final class Exclude
 {
+    /**
+     * @var bool
+     */
+    public $serialize;
+
+    /**
+     * @var bool
+     */
+    public $deserialize;
 }
