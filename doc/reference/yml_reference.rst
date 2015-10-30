@@ -26,7 +26,13 @@ YAML Reference
         properties:
             some-property:
                 exclude: true
+                exclude:
+                    serialize: true
+                    deserialize: false
                 expose: true
+                expose:
+                    serialize: false
+                    deserialize: true
                 access_type: public_method # defaults to property
                 accessor: # access_type must be set to public_method
                     getter: getSomeOtherProperty

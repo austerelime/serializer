@@ -12,7 +12,11 @@ XML Reference
             <discriminator-class value="some-value">ClassName</discriminator-class>
             <property name="some-property"
                       exclude="true"
+                      exclude-serialize="true"
+                      exclude-deserialize="false"
                       expose="true"
+                      expose-serialize="false"
+                      expose-deserialize="true"
                       type="string"
                       serialized-name="foo"
                       since-version="1.0"
@@ -44,7 +48,11 @@ XML Reference
             <virtual-property method="public_method"
                       name="some-property"
                       exclude="true"
+                      exclude-serialize="true"
+                      exclude-deserialize="false"
                       expose="true"
+                      expose-serialize="false"
+                      expose-deserialize="true"
                       type="string"
                       serialized-name="foo"
                       since-version="1.0"
@@ -66,6 +74,6 @@ XML Reference
                 <xml-list inline="true" entry-name="foobar" />
                 <xml-map inline="true" key-attribute-name="foo" entry-name="bar" />
             </virtual-property>
-            
+
         </class>
     </serializer>

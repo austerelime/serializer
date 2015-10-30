@@ -135,8 +135,24 @@ class XmlDriver extends AbstractFileDriver
                         $isExclude = 'true' === strtolower($exclude);
                     }
 
+                    if (null !== $excludeFromSerialize = $pElem->attributes()->{'exclude-serialize'}) {
+                        $pMetadata->excludeFromSerialize = 'true' === strtolower($excludeFromSerialize);
+                    }
+
+                    if (null !== $excludeFromDeserialize = $pElem->attributes()->{'exclude-deserialize'}) {
+                        $pMetadata->excludeFromDeserialize = 'true' === strtolower($excludeFromDeserialize);
+                    }
+
                     if (null !== $expose = $pElem->attributes()->expose) {
                         $isExpose = 'true' === strtolower($expose);
+                    }
+
+                    if (null !== $exposeToSerialize = $pElem->attributes()->{'expose-serialize'}) {
+                        $pMetadata->exposeToSerialize = 'true' === strtolower($exposeToSerialize);
+                    }
+
+                    if (null !== $exposeToDeserialize = $pElem->attributes()->{'expose-deserialize'}) {
+                        $pMetadata->exposeToDeserialize = 'true' === strtolower($exposeToDeserialize);
                     }
 
                     if (null !== $version = $pElem->attributes()->{'since-version'}) {
@@ -243,9 +259,8 @@ class XmlDriver extends AbstractFileDriver
 
                 }
 
-                if ((ExclusionPolicy::NONE === (string) $exclusionPolicy && ! $isExclude)
-                    || (ExclusionPolicy::ALL === (string) $exclusionPolicy && $isExpose)) {
-
+                if ((ExclusionPolicy::NONE === (string) $exclusionPolicy && (!$isExclude || isset($pMetadata->excludeFromSerialize) || isset($pMetadata->excludeFromDeserialize)))
+                    || (ExclusionPolicy::ALL === (string) $exclusionPolicy && ($isExpose || isset($pMetadata->exposeToSerialize) || isset($pMetadata->exposeToDeserialize)))) {
                     $metadata->addPropertyMetadata($pMetadata);
                 }
             }

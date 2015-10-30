@@ -44,6 +44,34 @@ then it is easier to change the exclusion policy, and only mark these few proper
     A property that is excluded by ``@Exclude`` cannot be exposed anymore by any
     of the following strategies, but is always hidden.
 
+@Exclude and @Expose
+--------------------
+You can further customize the behaviour of ``@Exclude`` and ``@Expose`` by specifying that the property is only excluded or exposed if serializing or deserializing.
+
+.. code-block :: php
+
+    <?php
+
+    use JMS\Serializer\Annotation\ExclusionPolicy;
+    use JMS\Serializer\Annotation\Expose;
+
+    /**
+     * The following annotations tells the serializer to skip all properties which
+     * have not marked with @Expose.
+     *
+     * @ExclusionPolicy("all")
+     */
+    class MyObject
+    {
+        private $foo;
+        private $bar;
+
+        /**
+         * @Expose(serialize=false,deserialise=true)
+         */
+        private $name;
+    }
+
 Versioning Objects
 ------------------
 JMSSerializerBundle comes by default with a very neat feature which allows
@@ -105,7 +133,7 @@ You can achieve that by using the ``@Groups`` annotation on your properties.
 
         /** @Groups({"details"}) */
         private $comments;
-        
+
         private $createdAt;
     }
 
@@ -114,11 +142,11 @@ You can then tell the serializer which groups to serialize in your controller::
     use JMS\Serializer\SerializationContext;
 
     $serializer->serialize(new BlogPost(), 'json', SerializationContext::create()->setGroups(array('list')));
-    
+
     //will output $id, $title and $nbComments.
 
     $serializer->serialize(new BlogPost(), 'json', SerializationContext::create()->setGroups(array('Default', 'list')));
-    
+
     //will output $id, $title, $nbComments and $createdAt.
 
 Limiting serialization depth of some properties
